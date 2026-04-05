@@ -1,0 +1,1 @@
+  export const JWT_SERECT= "123456" ;

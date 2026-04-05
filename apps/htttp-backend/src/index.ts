@@ -1,10 +1,19 @@
 import express from "express"
 import jwt from "jsonwebtoken"
 import { middleware } from "./middleware";
+import {JWT_SERECT}  from '@repo/backend-common/config'
+import {createUserSchema,SignInSchema} from "@repo/common/types"
+
 const app= express();
 
 app.post('/signup', async (req,res)=>{
-        //zod validations
+        const data = createUserSchema.safeParse(req.body);
+        if(!data.success){
+            res.json({
+                message:"invalid inputs"
+            })
+            return;
+        }
         //db  call 
         res.json({
            userId:"123"
@@ -12,8 +21,15 @@ app.post('/signup', async (req,res)=>{
 })
 
 app.post('/signin', async (req,res)=>{
+      const data = SignInSchema.safeParse(req.body);
+      if(data.success){
+        res.json({
+            message:"invalid inputs"
+        })
+        return;
+      }
         const userId=1;
-        const token= jwt.sign({userId},"123456")
+        const token= jwt.sign({userId},JWT_SERECT)
         res.json({
             token
         })
